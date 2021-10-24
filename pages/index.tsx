@@ -2,7 +2,8 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import {Grid, TextField} from '@mui/material'
+import {Grid, TextField, ButtonBase} from '@mui/material'
+import { MyTextField } from '../styles/components'
 
 const Home: NextPage = () => {
   return (
@@ -22,10 +23,11 @@ const Home: NextPage = () => {
         <h1 className={styles.title}>
           UFO Detector
         </h1>
-        <Grid container style={{margin: '20 10', paddingTop: '6rem'}}>
-          <Grid style={{padding:'0 12px'}} inputProps={{fontFamily: 'Schoolbell Regular'}} component={TextField} md={9} fullWidth variant="standard" label="URL"/>
-          <Grid style={{padding:'0 12px'}} component={TextField} md={3} fullWidth variant="standard" label="Portas"/>
-
+        <Grid container  style={{margin: '20 10', paddingTop: '6rem'}}>
+          <Grid className={'url'} component={MyTextField} md={6} fullWidth variant="standard" label="URL"/>
+          <Grid md={1}/>
+          <Grid className={'port'} inputProps={{fontFamily:'Schoolbell Regula'}} component={TextField} md={3} fullWidth variant="standard" label="Portas"/>
+          <Grid  style={{padding:'0 12px'}} md={2}> <button className={'lined thick'}> GO</button> </Grid>
         </Grid>
         
       </main>
