@@ -1,126 +1,175 @@
 html,
 body {
-  padding: 0;
-  margin: 0;
-  font-family: Schoolbell Regular;
+    padding: 0;
+    margin: 0;
+    font-family: Schoolbell Regular, Raleway Regular;
+    cursor: default;
 }
 
-
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 :root {
-  --primary: rgba(17, 97, 147, 255);
-  --secondary: rgba(0, 232, 228, 255);
+    --primary: rgba(17, 97, 147, 255);
+    --secondary: rgba(0, 232, 228, 255);
 
-  --card-bg: rgba(235, 235, 235, 255);
+    --card-bg: rgba(235, 235, 235, 255);
 
-  --chip-bg: rgba(255, 255, 255, 255);
-  --chip-border: rgba(141, 176, 198, 255);
-  --dark-grey: #e6e6e6;
+    --chip-bg: rgba(255, 255, 255, 255);
+    --chip-border: rgba(141, 176, 198, 255);
+    --dark-grey: #e6e6e6;
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+    color: inherit;
+    text-decoration: none;
 }
 
 @media (max-width: 1440px) {
-  html {
-      font-size: 85%;
-  }
+    html {
+        font-size: 85%;
+    }
 }
 
 @media (max-width: 1024px) {
-  html {
-      font-size: 70%;
-  }
+    html {
+        font-size: 70%;
+    }
 }
 
 @media (max-width: 800px) {
-  html {
-      font-size: 60%;
-  }
+    html {
+        font-size: 60%;
+    }
 }
 
 body {
-  background: var(--gray-50);
+    background: var(--gray-50);
+}
+
+.title {
+    font-family: Schoolbell Regular;
+    font-size: 3rem;
+}
+
+.subtitle {
+    font-family: Raleway;
+    font-size: 1.4rem;
+    text-align: center;
+    font-weight: 500;
+}
+.description {
+    font-family: Raleway;
+    font-size: 1rem;
+    text-align: center;
+    font-weight: 500;
+    justify-content: center;
+    padding-top: 8rem;
+}
+
+.text {
+    font-family: Schoolbell Regular;
+    font-size: 1.3rem;
+    text-align: center;
+    font-weight: 500;
+    justify-content: center;
+}
+
+.list {
+    width: 80vw;
+    border: solid 3.6px #a1a1a1;
+    // padding: 10rem 0;
+    align-self: center;
+    align-items: center;
+    background: transparent;
+    padding: 1rem 0rem;
+    // margin: 0 1rem;
+    transition: all 0.5s ease;
+    color: #41403e;
+    font-size: 2rem;
+    // letter-spacing: 1px;
+    // outline: none;
+    box-shadow: 20px 38px 34px -26px hsla(0, 0%, 0%, 0.2);
+    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+}
+
+.dot {
+    height: 25px;
+    width: 25px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
 }
 
 body,
 input,
 textarea,
-button {
-  font: 500 1rem Lato, sans-serif;
-  color: var(--gray-500);
-}
-
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  font-weight: 600;
-  font-family: Schoolbell Regular;
-  color: var(--gray-800);
+    font-weight: 600;
+    font-family: Schoolbell Regular;
+    color: var(--gray-800);
 }
 
 h1 {
-  font-size: 2rem;
+    font-size: 2rem;
 }
 
 h2 {
-  font-size: 1.6rem;
+    font-size: 1.6rem;
 }
 
-
 .port {
-  font-family: Schoolbell Regular;
+    font-family: Schoolbell Regular;
 }
 
 button {
-  font-family: Schoolbell Regular;
-  align-self:center;
-  background:transparent;
-  padding:0.1rem 2.4rem;
-  margin:0 1rem;
-  transition:all .5s ease;
-  color:#41403E;
-  font-size:2rem;
-  letter-spacing:1px;
-  outline:none;
-  box-shadow: 20px 38px 34px -26px hsla(0,0%,0%,.2);
-  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
-  /*
+    font-family: Schoolbell Regular;
+    align-self: center;
+    background: transparent;
+    padding: 0.1rem 2.4rem;
+    margin: 0 1rem;
+    transition: all 0.5s ease;
+    color: #41403e;
+    font-size: 2rem;
+    letter-spacing: 1px;
+    outline: none;
+    box-shadow: 20px 38px 34px -26px hsla(0, 0%, 0%, 0.2);
+    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+    /*
   Above is shorthand for:
   border-top-left-radius: 255px 15px;
   border-top-right-radius: 15px 225px;
   border-bottom-right-radius: 225px 15px;
   border-bottom-left-radius:15px 255px;
   */
-   &:hover{
-     box-shadow:2px 8px 4px -6px hsla(0,0%,0%,.3);
-  } 
-  &.lined.thick{
-     border:solid 3px #41403E;
-  }
-  &.dotted.thick{
-     border:dotted 5px #41403E;
-  }
-  &.dashed.thick{
-    border:dashed 5px #41403E;
-  }
-   &.lined.thin{
-     border:solid 2px #41403E;
-  }
-  &.dotted.thin{
-     border:dotted 2px #41403E;
-  }
-  &.dashed.thin{
-    border:dashed 2px #41403E;
-  }
+    &:hover {
+        box-shadow: 2px 8px 4px -6px hsla(0, 0%, 0%, 0.3);
+        cursor: pointer;
+    }
+    &.lined.thick {
+        border: solid 3px #41403e;
+    }
+    &.dotted.thick {
+        border: dotted 5px #41403e;
+    }
+    &.dashed.thick {
+        border: dashed 5px #41403e;
+    }
+    &.lined.thin {
+        border: solid 2px #41403e;
+    }
+    &.dotted.thin {
+        border: dotted 2px #41403e;
+    }
+    &.dashed.thin {
+        border: dashed 2px #41403e;
+    }
 }
