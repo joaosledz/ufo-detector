@@ -11,6 +11,8 @@ import { Item } from '../components/item';
 
 const Home: NextPage = () => {
     const [search, setSearch] = useState<boolean>(false);
+    const [title, setTitle] = useState<string>('Ufo Detector');
+    const [url, setUrl] = useState<string>('');
     return (
         <div className={styles.container}>
             <Head>
@@ -56,7 +58,7 @@ const Home: NextPage = () => {
                         variant="h1"
                         className={'title'}
                     >
-                        Ufo Detector
+                        {title}
                     </Grid>
                     <Grid
                         item
@@ -96,6 +98,8 @@ const Home: NextPage = () => {
                         fullWidth
                         variant="standard"
                         label="Portas"
+                        value={url}
+                        onChange={e => setUrl(e.target.value)}
                     />
                     <Grid style={{ padding: '0 12px' }} md={2}>
                         <button
