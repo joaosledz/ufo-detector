@@ -6,11 +6,65 @@ import { Grid, TextField, Typography } from '@mui/material';
 import { MyTextField } from '../styles/components';
 import LogoUFO from '../assets/images/logoUFO.png';
 import { analytics } from '../services/sample';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Item } from '../components/item';
+import SocketIOClient from "socket.io-client";
+interface IMsg {
+    user: string;
+    url: string;
+    port: string;
+}
+
+const user = "User_" + String(new Date().getTime()).substr(-3);
 
 const Home: NextPage = () => {
     const [search, setSearch] = useState<boolean>(false);
+    const [connected, setConnected] = useState<boolean>(false);
+    const [vulnerabilities, setVulnerability] = useState<IMsg[]>([]);
+    const [port, setPort] = useState<string>("");
+    const [url, setUrl] = useState<string>("");
+
+    useEffect((): any => {
+        // connect to socket server
+        const socket = SocketIOClient.connect(process.env.BASE_URL, {
+            path: "/api/socketio",
+        });
+    
+        socket.on("connect", () => {
+            console.log("SOCKET CONNECTED!", socket.id);
+            setConnected(true);
+        });
+    
+        socket.on("message", (message: IMsg) => {
+            vulnerabilities.push(message);
+            setVulnerability([...vulnerabilities]);
+        });
+    
+        if (socket) return () => socket.disconnect();
+    }, []);
+
+    const sendMessage = async () => {
+        if (url) {
+            const message: IMsg = {
+                user,
+                url,
+                port
+            };
+
+            const resp = await fetch("/api/url", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(message),
+            });
+
+            if (resp.ok) {
+                setSearch(true);
+            }
+        }
+    };
+
     return (
         <div className={styles.container}>
             <Head>
@@ -79,35 +133,42 @@ const Home: NextPage = () => {
                     }}
                 >
                     <Grid
-                        className={'url'}
-                        component={MyTextField}
                         md={6}
-                        fullWidth
-                        variant="standard"
-                        label="URL"
-                    />
+                    >
+                        <TextField
+                            variant="standard"
+                            className={'url'}
+                            fullWidth   
+                            value={url}
+                            onChange={(event) => setUrl(event.target.value)}
+                            label="URL"
+                        />
+                    </Grid>
                     <Grid md={1} />
                     <Grid
-                        className={'port'}
-                        // labelClassName={'port'}
-                        inputProps={{ fontFamily: 'Schoolbell Regular' }}
-                        component={TextField}
                         md={3}
-                        fullWidth
-                        variant="standard"
-                        label="Portas"
-                    />
+                    >
+                        <TextField
+                            variant="standard"
+                            className={'port'}
+                            fullWidth   
+                            value={port}
+                            onChange={(event) => setPort(event.target.value)}
+                            label="PORT"
+                        />
+                    </Grid>
                     <Grid style={{ padding: '0 12px' }} md={2}>
                         <button
+                            disabled={!connected}
                             className={'lined thick'}
                             onClick={() => {
-                                setSearch(!search);
+                                sendMessage();
                             }}
                         >
                             GO
                         </button>
                     </Grid>
-                    {search ? (
+                    {!search ? (
                         <Grid
                             className={'description'}
                             container
