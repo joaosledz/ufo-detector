@@ -130,6 +130,12 @@ h2 {
     font-family: Schoolbell Regular;
 }
 
+.image {
+    &:hover {
+        cursor: pointer;
+    }
+}
+
 button {
     font-family: Schoolbell Regular;
     align-self: center;

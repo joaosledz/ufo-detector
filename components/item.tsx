@@ -4,6 +4,7 @@ import Image from 'next/image';
 import howToProtect from '../assets/images/Buttons/howToProtect.svg';
 import redExploit from '../assets/images/Buttons/redExploit.svg';
 import nullExploit from '../assets/images/Buttons/nullExploit.svg';
+import Link from 'next/link';
 
 type Item = {
     id: string;
@@ -51,14 +52,12 @@ export function Item(Props: Item) {
                 <Grid item className={'text'} md={2} component={Typography}>
                     {id}
                 </Grid>
-                <Grid
-                    item
-                    md={4}
-                    component={Image}
-                    src={redExploit}
-                    height={40}
-                />
-                <Grid item md={4} component={Image} src={howToProtect} />
+                <Grid item md={4} component={Link} href={`HowToExploit/${id}`}>
+                    <Image className="image" src={redExploit} />
+                </Grid>
+                <Grid item md={4} component={Link} href={`HowToProtect/${id}`}>
+                    <Image className="image" src={howToProtect} />
+                </Grid>
                 <Grid item className={'text'} md={1} component={Typography}>
                     cvss:{cvss}
                 </Grid>
