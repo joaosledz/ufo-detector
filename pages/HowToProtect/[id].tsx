@@ -1,29 +1,43 @@
 import Image from 'next/image';
 import styles from '../../styles/Home.module.css';
-import { Grid, TextField, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
+import howToProtect from '../../assets/images/Buttons/howToProtect.svg';
+import { ScanContext } from '../../context/scan';
+import { useContext } from 'react';
+import { Protection } from '@/../services/models/analytics';
+import { ProtectInfo } from './components/protectInfo';
+import { DrawedButton } from '@/../components/drawedButton';
 
 export default function HowToProtect() {
+    const { scanData } = useContext(ScanContext);
     return (
-        <div className={styles.container}>
-            <Typography> PAGINA HOW TO PROTECT</Typography>
-
-            <footer className={styles.footer}>
-                <a
-                    href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Powered by{' '}
-                    <span className={styles.logo}>
+        <div
+            className={styles.container}
+            style={{ justifyContent: 'flex-start', paddingBottom: '3rem' }}
+        >
+            <Grid
+                container
+                style={{ marginTop: '3rem', width: '80vw' }}
+                alignItems="center"
+                justifyContent="space-between"
+            >
+                <DrawedButton title="<" />
+                <Grid>
+                    <span>
                         <Image
-                            src="/vercel.svg"
-                            alt="Vercel Logo"
-                            width={72}
-                            height={16}
+                            width={300}
+                            height={120}
+                            className="image"
+                            src={howToProtect}
                         />
                     </span>
-                </a>
-            </footer>
+                </Grid>
+                <Grid />
+            </Grid>
+
+            {scanData.capec.map((protection: Protection) => {
+                return <ProtectInfo protection={protection} />;
+            })}
         </div>
     );
 }

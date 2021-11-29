@@ -5,17 +5,13 @@ import howToProtect from '../assets/images/Buttons/howToProtect.svg';
 import redExploit from '../assets/images/Buttons/redExploit.svg';
 import nullExploit from '../assets/images/Buttons/nullExploit.svg';
 import Link from 'next/link';
+import { Vulnerability } from '../services/models/analytics';
 
-type Item = {
-    id: string;
-    cvss: number;
-};
-
-export function Item(Props: Item) {
-    const { id, cvss } = Props;
+export function MainItem(Props: { vulnerability: Vulnerability }) {
+    const { id, cvss, is_exploit } = Props.vulnerability;
     const [color, setColor] = useState<string>('green');
     const [classification, setClassification] = useState<string>('low');
-
+    const isExploit = is_exploit === 'true';
     const classify = (cvss: number) => {
         if (cvss <= 3.9) {
             setColor('#21B803');
@@ -38,7 +34,7 @@ export function Item(Props: Item) {
     };
 
     useEffect(() => {
-        classify(cvss);
+        classify(parseFloat(cvss));
     }, [cvss]);
     return (
         <div className={'list'}>
@@ -52,9 +48,20 @@ export function Item(Props: Item) {
                 <Grid item className={'text'} md={2} component={Typography}>
                     {id}
                 </Grid>
-                <Grid item md={4} component={Link} href={`HowToExploit/${id}`}>
-                    <Image className="image" src={redExploit} />
-                </Grid>
+                {isExploit ? (
+                    <Grid
+                        item
+                        md={4}
+                        component={Link}
+                        href={`HowToExploit/${id}`}
+                    >
+                        <Image className="image" src={redExploit} />
+                    </Grid>
+                ) : (
+                    <Grid item md={4}>
+                        <Image className="image" src={nullExploit} />
+                    </Grid>
+                )}
                 <Grid item md={4} component={Link} href={`HowToProtect/${id}`}>
                     <Image className="image" src={howToProtect} />
                 </Grid>

@@ -3,12 +3,14 @@ import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 import { Grid, TextField, Typography } from '@mui/material';
-import { MyTextField } from '../styles/components';
 import LogoUFO from '../assets/images/logoUFO.png';
+import pageNotFound from '../assets/images/pageNotFoundBanner.svg';
 import { analytics } from '../services/sample';
-import { useState } from 'react';
-import { Item } from '../components/item';
 import axios from 'axios';
+import { useState, useEffect } from 'react';
+import { vulnerabilitiesData } from '../services/sample';
+import SocketIOClient from 'socket.io-client';
+import { MainInfo } from '../components/MainInfo';
 interface IMsg {
     user: string;
     url: string;
@@ -25,10 +27,33 @@ const user = "user_" + String(new Date().getTime()).substr(-3);
 
 const Home: NextPage = () => {
     const [search, setSearch] = useState<boolean>(false);
+    const [title, setTitle] = useState<string>('Ufo Detector');
     const [connected, setConnected] = useState<boolean>(false);
     const [vulnerabilities, setVulnerabilities] = useState<Vulnerability[]>([]);
-    const [port, setPort] = useState<string>("");
-    const [url, setUrl] = useState<string>("");
+
+    const [port, setPort] = useState<string>('');
+    const [url, setUrl] = useState<string>('');
+    const [isError, setIsError] = useState<boolean>(false);
+
+    useEffect((): any => {
+        // connect to socket server
+        const socket = SocketIOClient.connect(process.env.BASE_URL, {
+            path: '/api/socketio',
+        });
+
+        socket.on('connect', () => {
+            console.log('SOCKET CONNECTED!', socket.id);
+            setConnected(true);
+        });
+
+        socket.on('message', (message: IMsg) => {
+            vulnerabilities.push(message);
+            setVulnerability([...vulnerabilities]);
+            console.log(vulnerabilities);
+        });
+
+        if (socket) return () => socket.disconnect();
+    }, []);
 
     const sendMessage = async () => {
         setConnected(true);
@@ -42,6 +67,7 @@ const Home: NextPage = () => {
                 })
                 .catch(function (error) {
                     console.log(error);
+
             });
         }
     };
@@ -91,7 +117,7 @@ const Home: NextPage = () => {
                         variant="h1"
                         className={'title'}
                     >
-                        Ufo Detector
+                        {title}
                     </Grid>
                     <Grid
                         item
@@ -113,28 +139,24 @@ const Home: NextPage = () => {
                         paddingRight: '6rem',
                     }}
                 >
-                    <Grid
-                        md={6}
-                    >
+                    <Grid md={6}>
                         <TextField
                             variant="standard"
                             className={'url'}
-                            fullWidth   
+                            fullWidth
                             value={url}
-                            onChange={(event) => setUrl(event.target.value)}
+                            onChange={event => setUrl(event.target.value)}
                             label="URL"
                         />
                     </Grid>
                     <Grid md={1} />
-                    <Grid
-                        md={3}
-                    >
+                    <Grid md={3}>
                         <TextField
                             variant="standard"
                             className={'port'}
-                            fullWidth   
+                            fullWidth
                             value={port}
-                            onChange={(event) => setPort(event.target.value)}
+                            onChange={event => setPort(event.target.value)}
                             label="PORT"
                         />
                     </Grid>
@@ -148,46 +170,36 @@ const Home: NextPage = () => {
                             GO
                         </button>
                     </Grid>
-                    {!search ? (
-                        <Grid
-                            className={'description'}
-                            container
-                            component={Typography}
-                        >
-                            The objective of this work is to develop a Network
-                            Vulnerability Test (NVT) used to scan endpoints to
-                            identify and detect vulnerabilities that measure and
-                            return a cybersecurity assessment to know the degree
-                            of maturity in terms of information protection and
-                            make sure that it is in line with its OWASP (Open
-                            Web Application Security Project) and other
-                            regulatory requirements.
-                        </Grid>
-                    ) : (
-                        <Grid className={'description'} container>
-                            <Item id={analytics.id} cvss={analytics.cvss} />
-                        </Grid>
-                    )}
+                    <Grid
+                        className={'description'}
+                        container
+                        component={Typography}
+                    >
+                        {isError ? (
+                            <Image
+                                width={145}
+                                height={145}
+                                className="image"
+                                src={pageNotFound}
+                            />
+                        ) : !search ? (
+                            <Typography>
+                                The objective of this work is to develop a
+                                Network Vulnerability Test (NVT) used to scan
+                                endpoints to identify and detect vulnerabilities
+                                that measure and return a cybersecurity
+                                assessment to know the degree of maturity in
+                                terms of information protection and make sure
+                                that it is in line with its OWASP (Open Web
+                                Application Security Project) and other
+                                regulatory requirements.
+                            </Typography>
+                        ) : (
+                            <MainInfo vulnerabilities={vulnerabilitiesData} />
+                        )}
+                    </Grid>
                 </Grid>
             </main>
-
-            <footer className={styles.footer}>
-                <a
-                    href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Powered by{' '}
-                    <span className={styles.logo}>
-                        <Image
-                            src="/vercel.svg"
-                            alt="Vercel Logo"
-                            width={72}
-                            height={16}
-                        />
-                    </span>
-                </a>
-            </footer>
         </div>
     );
 };
