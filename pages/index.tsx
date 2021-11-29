@@ -8,7 +8,7 @@ import pageNotFound from '../assets/images/pageNotFoundBanner.svg';
 import { analytics } from '../services/sample';
 import axios from 'axios';
 import { useState } from 'react';
-// import { vulnerabilitiesData } from '../services/sample';
+import { vulnerabilitiesData } from '../services/sample';
 import { MainInfo } from '../components/MainInfo';
 import { Vulnerability } from '../services/models/analytics';
 interface IMsg {
@@ -154,7 +154,7 @@ const Home: NextPage = () => {
                                 className="image"
                                 src={pageNotFound}
                             />
-                        ) : vulnerabilities.length === 0 ? (
+                        ) : vulnerabilitiesData.length === 0 ? (
                             <Typography>
                                 The objective of this work is to develop a
                                 Network Vulnerability Test (NVT) used to scan
@@ -167,7 +167,7 @@ const Home: NextPage = () => {
                                 regulatory requirements.
                             </Typography>
                         ) : (
-                            <MainInfo vulnerabilities={vulnerabilities} />
+                            <MainInfo vulnerabilities={vulnerabilitiesData} />
                         )}
                     </Grid>
                 </Grid>
