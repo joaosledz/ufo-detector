@@ -78,6 +78,31 @@ body {
     justify-content: center;
 }
 
+.itemMainTitle {
+    font-family: Schoolbell Regular;
+    font-size: 1.8rem;
+    text-align: left;
+    font-weight: 600;
+    justify-content: center;
+}
+
+.itemTitle {
+    font-family: Schoolbell Regular;
+    font-size: 1.2rem;
+    text-align: left;
+    font-weight: 600;
+    justify-content: center;
+    margin-top: 1.7rem;
+}
+
+.itemDescription {
+    font-family: Raleway Regular;
+    font-size: 1rem;
+    text-align: left;
+    font-weight: 500;
+    justify-content: center;
+}
+
 .list {
     width: 80vw;
     border: solid 3.6px #a1a1a1;

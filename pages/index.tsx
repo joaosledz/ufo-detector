@@ -3,12 +3,13 @@ import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 import { Grid, TextField, Typography } from '@mui/material';
-import { MyTextField } from '../styles/components';
 import LogoUFO from '../assets/images/logoUFO.png';
+import pageNotFound from '../assets/images/pageNotFoundBanner.svg';
 import { analytics } from '../services/sample';
-import { useState, useEffect, useRef } from 'react';
-import { Item } from '../components/item';
+import { useState, useEffect } from 'react';
+import { vulnerabilitiesData } from '../services/sample';
 import SocketIOClient from 'socket.io-client';
+import { MainInfo } from '../components/MainInfo';
 interface IMsg {
     user: string;
     url: string;
@@ -24,6 +25,7 @@ const Home: NextPage = () => {
     const [vulnerabilities, setVulnerability] = useState<IMsg[]>([]);
     const [port, setPort] = useState<string>('');
     const [url, setUrl] = useState<string>('');
+    const [isError, setIsError] = useState<boolean>(false);
 
     useEffect((): any => {
         // connect to socket server
@@ -166,46 +168,36 @@ const Home: NextPage = () => {
                             GO
                         </button>
                     </Grid>
-                    {!search ? (
-                        <Grid
-                            className={'description'}
-                            container
-                            component={Typography}
-                        >
-                            The objective of this work is to develop a Network
-                            Vulnerability Test (NVT) used to scan endpoints to
-                            identify and detect vulnerabilities that measure and
-                            return a cybersecurity assessment to know the degree
-                            of maturity in terms of information protection and
-                            make sure that it is in line with its OWASP (Open
-                            Web Application Security Project) and other
-                            regulatory requirements.
-                        </Grid>
-                    ) : (
-                        <Grid className={'description'} container>
-                            <Item id={analytics.id} cvss={analytics.cvss} />
-                        </Grid>
-                    )}
+                    <Grid
+                        className={'description'}
+                        container
+                        component={Typography}
+                    >
+                        {isError ? (
+                            <Image
+                                width={145}
+                                height={145}
+                                className="image"
+                                src={pageNotFound}
+                            />
+                        ) : !search ? (
+                            <Typography>
+                                The objective of this work is to develop a
+                                Network Vulnerability Test (NVT) used to scan
+                                endpoints to identify and detect vulnerabilities
+                                that measure and return a cybersecurity
+                                assessment to know the degree of maturity in
+                                terms of information protection and make sure
+                                that it is in line with its OWASP (Open Web
+                                Application Security Project) and other
+                                regulatory requirements.
+                            </Typography>
+                        ) : (
+                            <MainInfo vulnerabilities={vulnerabilitiesData} />
+                        )}
+                    </Grid>
                 </Grid>
             </main>
-
-            <footer className={styles.footer}>
-                <a
-                    href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Powered by{' '}
-                    <span className={styles.logo}>
-                        <Image
-                            src="/vercel.svg"
-                            alt="Vercel Logo"
-                            width={72}
-                            height={16}
-                        />
-                    </span>
-                </a>
-            </footer>
         </div>
     );
 };
