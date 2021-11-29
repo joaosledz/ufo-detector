@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
-import { Grid, TextField, Typography } from '@mui/material';
+import { Grid, TextField, Typography, CircularProgress } from '@mui/material';
 import LogoUFO from '../assets/images/logoUFO.png';
 import pageNotFound from '../assets/images/pageNotFoundBanner.svg';
 import { analytics } from '../services/sample';
@@ -22,8 +22,7 @@ const user = 'user_' + String(new Date().getTime()).substr(-3);
 
 const Home: NextPage = () => {
     const { scanData, setScanData } = useContext(ScanContext);
-    // const [vulnerabilities, setVulnerabilities] = useState<Vulnerability[]>([]);
-
+    const [loading, setLoading] = useState(false);
     const [port, setPort] = useState<string>('');
     const [url, setUrl] = useState<string>('');
     const [isError, setIsError] = useState<boolean>(false);
@@ -35,7 +34,7 @@ const Home: NextPage = () => {
     const sendMessage = async () => {
         if (url) {
             const message: IMsg = { user, url, port };
-
+            setLoading(true);
             axios
                 .post<Vulnerability[]>('/api/url', message)
                 .then(function (response) {
@@ -43,6 +42,7 @@ const Home: NextPage = () => {
                         filterVulnerabilities(response.data)
                     );
                     setIsError(false);
+                    setLoading(false);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -149,6 +149,11 @@ const Home: NextPage = () => {
                             GO
                         </button>
                     </Grid>
+                    {loading ?
+                        <CircularProgress style={{ position: 'fixed', top: '70%', left: '50%' }}/>
+                        :
+                        null
+                    }
                     <Grid
                         className={'description'}
                         container
