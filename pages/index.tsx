@@ -148,12 +148,13 @@ const Home: NextPage = () => {
                     >
                         {isError ? (
                             <Image
+                                alt="Imagem de erro"
                                 width={145}
                                 height={145}
                                 className="image"
                                 src={pageNotFound}
                             />
-                        ) : !vulnerabilities ? (
+                        ) : vulnerabilities.length === 0 ? (
                             <Typography>
                                 The objective of this work is to develop a
                                 Network Vulnerability Test (NVT) used to scan
