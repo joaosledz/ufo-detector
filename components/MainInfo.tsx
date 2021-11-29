@@ -8,8 +8,8 @@ export function MainInfo(Props: { vulnerabilities: Vulnerability[] }) {
     const [page, setPage] = useState(1);
     return (
         <Grid>
-            {vulnerabilities.map(item => {
-                return <MainItem vulnerability={item} />;
+            {vulnerabilities.map((item, index) => {
+                return <MainItem key={index} vulnerability={item} />;
             })}
         </Grid>
     );

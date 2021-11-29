@@ -8,7 +8,7 @@ import pageNotFound from '../assets/images/pageNotFoundBanner.svg';
 import { analytics } from '../services/sample';
 import axios from 'axios';
 import { useState } from 'react';
-// import { vulnerabilitiesData } from '../services/sample';
+import { vulnerabilitiesData } from '../services/sample';
 import { MainInfo } from '../components/MainInfo';
 import { Vulnerability } from '../services/models/analytics';
 interface IMsg {
@@ -26,6 +26,10 @@ const Home: NextPage = () => {
     const [url, setUrl] = useState<string>('');
     const [isError, setIsError] = useState<boolean>(false);
 
+    const filterVulnerabilities = (vuln: Vulnerability[]) => {
+        return vuln.filter(v => v.type === 'cve' || v.type === 'zdt')
+    }
+
     const sendMessage = async () => {
         if (url) {
             const message: IMsg = { user, url, port };
@@ -33,7 +37,9 @@ const Home: NextPage = () => {
             axios
                 .post<Vulnerability[]>('/api/url', message)
                 .then(function (response) {
-                    setVulnerabilities(response.data);
+                    setVulnerabilities(
+                        filterVulnerabilities(response.data)
+                    );
                     setIsError(false);
                 })
                 .catch(function (error) {

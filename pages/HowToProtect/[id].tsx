@@ -25,6 +25,7 @@ export default function HowToProtect() {
                 <Grid>
                     <span>
                         <Image
+                            alt="Imagem"
                             width={300}
                             height={120}
                             className="image"
@@ -35,8 +36,8 @@ export default function HowToProtect() {
                 <Grid />
             </Grid>
 
-            {scanData.capec.map((protection: Protection) => {
-                return <ProtectInfo protection={protection} />;
+            {scanData.capec.map((protection: Protection, index: number) => {
+                return <ProtectInfo key={index} protection={protection} />;
             })}
         </div>
     );
