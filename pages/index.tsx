@@ -160,7 +160,7 @@ const Home: NextPage = () => {
                                 className="image"
                                 src={pageNotFound}
                             />
-                        ) : vulnerabilities.length === 0 ? (
+                        ) : vulnerabilitiesData.length === 0 ? (
                             <Typography>
                                 The objective of this work is to develop a
                                 Network Vulnerability Test (NVT) used to scan
@@ -173,7 +173,7 @@ const Home: NextPage = () => {
                                 regulatory requirements.
                             </Typography>
                         ) : (
-                            <MainInfo vulnerabilities={vulnerabilities} />
+                            <MainInfo vulnerabilities={vulnerabilitiesData} />
                         )}
                     </Grid>
                 </Grid>

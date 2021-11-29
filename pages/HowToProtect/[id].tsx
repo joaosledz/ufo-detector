@@ -1,15 +1,33 @@
 import Image from 'next/image';
 import styles from '../../styles/Home.module.css';
+import { useRouter } from 'next/router'
 import { Grid } from '@mui/material';
 import howToProtect from '../../assets/images/Buttons/howToProtect.svg';
 import { ScanContext } from '../../context/scan';
-import { useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Protection } from '@/../services/models/analytics';
 import { ProtectInfo } from './components/protectInfo';
 import { DrawedButton } from '@/../components/drawedButton';
+import axios from 'axios';
 
 export default function HowToProtect() {
-    const { scanData } = useContext(ScanContext);
+    const router = useRouter();
+    const cveApiUrl = "https://cve.circl.lu/api/cve";
+    const { id } = router.query;
+    const [data, setData] = useState<Protection[]>([]);
+
+    useEffect(() => {
+        axios
+            .get(`${cveApiUrl}/${id}`)
+            .then(function (response) {
+                console.log(response)
+                setData(response.data.capec)
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }, []);
+
     return (
         <div
             className={styles.container}
@@ -36,9 +54,13 @@ export default function HowToProtect() {
                 <Grid />
             </Grid>
 
-            {scanData.capec.map((protection: Protection, index: number) => {
+            {data.map((protection: Protection, index: number) => {
                 return <ProtectInfo key={index} protection={protection} />;
             })}
+
+            {data.length === 0 && (
+                <h2>No results found</h2>
+            )}
         </div>
     );
 }
