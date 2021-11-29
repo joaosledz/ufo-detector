@@ -3,8 +3,7 @@ import styles from '../../styles/Home.module.css';
 import { useRouter } from 'next/router'
 import { Grid } from '@mui/material';
 import howToProtect from '../../assets/images/Buttons/howToProtect.svg';
-import { ScanContext } from '../../context/scan';
-import { useState, useContext, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Protection } from '@/../services/models/analytics';
 import { ProtectInfo } from './components/protectInfo';
 import { DrawedButton } from '@/../components/drawedButton';

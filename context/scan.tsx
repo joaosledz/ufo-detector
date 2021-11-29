@@ -1,10 +1,12 @@
 import React, { createContext, useState, useCallback } from 'react';
+import { Vulnerability } from '../services/models/analytics';
 // import {
 //     imageApi,
 // } from '../../services';
 import { analytics } from '../services/sample';
 type TypeScanContext = {
     scanData: any | null;
+    setScanData: React.Dispatch<React.SetStateAction<Vulnerability[]>>;
     loading: boolean;
     getScanData: (project_id: number) => Promise<any>;
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -32,7 +34,7 @@ export const ScanProvider: React.FC = ({ children }) => {
     // const projectData = getStoragedProject();
 
     const [loading, setLoading] = useState(false);
-    const [scanData, setScanData] = useState(analytics);
+    const [scanData, setScanData] = useState<Vulnerability[]>([]);
 
     const getScanData = useCallback(async (project_id: number) => {
         // try {
@@ -55,6 +57,7 @@ export const ScanProvider: React.FC = ({ children }) => {
         <ScanContext.Provider
             value={{
                 scanData,
+                setScanData,
                 loading,
                 getScanData,
                 setLoading,

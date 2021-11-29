@@ -7,7 +7,8 @@ import LogoUFO from '../assets/images/logoUFO.png';
 import pageNotFound from '../assets/images/pageNotFoundBanner.svg';
 import { analytics } from '../services/sample';
 import axios from 'axios';
-import { useState } from 'react';
+import { ScanContext } from '../context/scan';
+import { useState, useContext } from 'react';
 import { vulnerabilitiesData } from '../services/sample';
 import { MainInfo } from '../components/MainInfo';
 import { Vulnerability } from '../services/models/analytics';
@@ -20,7 +21,8 @@ interface IMsg {
 const user = 'user_' + String(new Date().getTime()).substr(-3);
 
 const Home: NextPage = () => {
-    const [vulnerabilities, setVulnerabilities] = useState<Vulnerability[]>([]);
+    const { scanData, setScanData } = useContext(ScanContext);
+    // const [vulnerabilities, setVulnerabilities] = useState<Vulnerability[]>([]);
 
     const [port, setPort] = useState<string>('');
     const [url, setUrl] = useState<string>('');
@@ -37,7 +39,7 @@ const Home: NextPage = () => {
             axios
                 .post<Vulnerability[]>('/api/url', message)
                 .then(function (response) {
-                    setVulnerabilities(
+                    setScanData(
                         filterVulnerabilities(response.data)
                     );
                     setIsError(false);
@@ -160,7 +162,7 @@ const Home: NextPage = () => {
                                 className="image"
                                 src={pageNotFound}
                             />
-                        ) : vulnerabilitiesData.length === 0 ? (
+                        ) : scanData.length === 0 ? (
                             <Typography>
                                 The objective of this work is to develop a
                                 Network Vulnerability Test (NVT) used to scan
@@ -173,7 +175,7 @@ const Home: NextPage = () => {
                                 regulatory requirements.
                             </Typography>
                         ) : (
-                            <MainInfo vulnerabilities={vulnerabilitiesData} />
+                            <MainInfo vulnerabilities={scanData} />
                         )}
                     </Grid>
                 </Grid>
