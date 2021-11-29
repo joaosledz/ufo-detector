@@ -6,6 +6,7 @@ import { Grid, TextField, Typography } from '@mui/material';
 import LogoUFO from '../assets/images/logoUFO.png';
 import pageNotFound from '../assets/images/pageNotFoundBanner.svg';
 import { analytics } from '../services/sample';
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { vulnerabilitiesData } from '../services/sample';
 import SocketIOClient from 'socket.io-client';
@@ -15,14 +16,21 @@ interface IMsg {
     url: string;
     port: string;
 }
+interface Vulnerability {
+    cvss: string,
+    type: string,
+    is_exploit: boolean,
+    id: string
+}
 
-const user = 'User_' + String(new Date().getTime()).substr(-3);
+const user = "user_" + String(new Date().getTime()).substr(-3);
 
 const Home: NextPage = () => {
     const [search, setSearch] = useState<boolean>(false);
     const [title, setTitle] = useState<string>('Ufo Detector');
     const [connected, setConnected] = useState<boolean>(false);
-    const [vulnerabilities, setVulnerability] = useState<IMsg[]>([]);
+    const [vulnerabilities, setVulnerabilities] = useState<Vulnerability[]>([]);
+
     const [port, setPort] = useState<string>('');
     const [url, setUrl] = useState<string>('');
     const [isError, setIsError] = useState<boolean>(false);
@@ -48,24 +56,19 @@ const Home: NextPage = () => {
     }, []);
 
     const sendMessage = async () => {
+        setConnected(true);
         if (url) {
-            const message: IMsg = {
-                user,
-                url,
-                port,
-            };
+            const message: IMsg = { user, url, port };
 
-            const resp = await fetch('/api/url', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(message),
+            axios.post('/api/url', message)
+                .then(function (response) {
+                    setSearch(true);
+                    setVulnerabilities(response.data);
+                })
+                .catch(function (error) {
+                    console.log(error);
+
             });
-
-            if (resp.ok) {
-                setSearch(true);
-            }
         }
     };
 
@@ -159,7 +162,6 @@ const Home: NextPage = () => {
                     </Grid>
                     <Grid style={{ padding: '0 12px' }} md={2}>
                         <button
-                            disabled={!connected}
                             className={'lined thick'}
                             onClick={() => {
                                 sendMessage();
