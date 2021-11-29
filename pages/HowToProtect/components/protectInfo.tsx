@@ -1,10 +1,10 @@
 import React from 'react';
 import { Grid, Typography } from '@mui/material';
 import { Protection } from '@/../services/models/analytics';
-import { ProtectItem } from './protectItem';
+import ProtectItem from './protectItem';
 
-export function ProtectInfo(Props: { protection: Protection }) {
-    const { id, name, prerequisites, solutions, summary } = Props.protection;
+export default function ProtectInfo(Props: { protection: Protection }) {
+    const { name, prerequisites, solutions, summary } = Props.protection;
 
     return (
         <div

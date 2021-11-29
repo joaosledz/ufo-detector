@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Typography } from '@mui/material';
 import { Protection } from '@/../services/models/analytics';
 
-export function ProtectItem(Props: { title: string; description: string }) {
+export default function ProtectItem(Props: { title: string; description: string }) {
     const { title, description } = Props;
 
     return (
