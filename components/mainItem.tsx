@@ -38,7 +38,7 @@ export function MainItem(Props: { vulnerability: Vulnerability }) {
         classify(parseFloat(cvss));
     }, [cvss]);
     return (
-        <div className={'list'}>
+        <div className={'list'} style={{ marginTop: '10px' }}>
             <Grid
                 container
                 spacing={1}
@@ -46,42 +46,43 @@ export function MainItem(Props: { vulnerability: Vulnerability }) {
                 alignItems="center"
                 item
             >
-                <Grid item className={'text'} md={4} component={Typography}>
+                <Grid item className={'text'} xs={6} component={Typography}>
                     {id}
                 </Grid>
                 {isExploit ? (
                     <Grid
                         item
-                        md={2}
+                        xs={2}
                         component={Link}
                         href={`HowToExploit/${id}`}
                     >
                         <Image className="image" src={redExploit} />
                     </Grid>
                 ) : (
-                    <Grid item md={2}>
+                    <Grid item xs={2}>
                         <Image src={nullExploit} />
                     </Grid>
                 )}
                 {type === 'cve' ? (
                     <Grid
                         item
-                        md={2}
+                        xs={2}
                         component={Link}
                         href={`HowToProtect/${id}`}
+                        alignContent={'center'}
                     >
                         <Image className="image" src={howToProtect} />
                     </Grid>
                 ) : (
-                    <Grid item md={2}>
+                    <Grid item xs={2}>
                         <Image src={nullProtect} />
                     </Grid>
                 )}
 
-                <Grid item className={'text'} md={1} component={Typography}>
+                <Grid item className={'text'} xs={1} component={Typography}>
                     cvss:{cvss}
                 </Grid>
-                <Grid item md={1}>
+                <Grid item xs={1}>
                     <span
                         className="dot"
                         style={{ backgroundColor: `${color}` }}
