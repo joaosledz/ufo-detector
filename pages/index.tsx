@@ -7,68 +7,39 @@ import LogoUFO from '../assets/images/logoUFO.png';
 import pageNotFound from '../assets/images/pageNotFoundBanner.svg';
 import { analytics } from '../services/sample';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
-import { vulnerabilitiesData } from '../services/sample';
-import SocketIOClient from 'socket.io-client';
+import { useState } from 'react';
+// import { vulnerabilitiesData } from '../services/sample';
 import { MainInfo } from '../components/MainInfo';
+import { Vulnerability } from '../services/models/analytics';
 interface IMsg {
     user: string;
     url: string;
     port: string;
 }
-interface Vulnerability {
-    cvss: string,
-    type: string,
-    is_exploit: boolean,
-    id: string
-}
 
-const user = "user_" + String(new Date().getTime()).substr(-3);
+const user = 'user_' + String(new Date().getTime()).substr(-3);
 
 const Home: NextPage = () => {
-    const [search, setSearch] = useState<boolean>(false);
-    const [title, setTitle] = useState<string>('Ufo Detector');
-    const [connected, setConnected] = useState<boolean>(false);
     const [vulnerabilities, setVulnerabilities] = useState<Vulnerability[]>([]);
 
     const [port, setPort] = useState<string>('');
     const [url, setUrl] = useState<string>('');
     const [isError, setIsError] = useState<boolean>(false);
 
-    useEffect((): any => {
-        // connect to socket server
-        const socket = SocketIOClient.connect(process.env.BASE_URL, {
-            path: '/api/socketio',
-        });
-
-        socket.on('connect', () => {
-            console.log('SOCKET CONNECTED!', socket.id);
-            setConnected(true);
-        });
-
-        socket.on('message', (message: IMsg) => {
-            vulnerabilities.push(message);
-            setVulnerability([...vulnerabilities]);
-            console.log(vulnerabilities);
-        });
-
-        if (socket) return () => socket.disconnect();
-    }, []);
-
     const sendMessage = async () => {
-        setConnected(true);
         if (url) {
             const message: IMsg = { user, url, port };
 
-            axios.post('/api/url', message)
+            axios
+                .post<Vulnerability[]>('/api/url', message)
                 .then(function (response) {
-                    setSearch(true);
                     setVulnerabilities(response.data);
+                    setIsError(false);
                 })
                 .catch(function (error) {
                     console.log(error);
-
-            });
+                    setIsError(true);
+                });
         }
     };
 
@@ -117,7 +88,7 @@ const Home: NextPage = () => {
                         variant="h1"
                         className={'title'}
                     >
-                        {title}
+                        Ufo Detector
                     </Grid>
                     <Grid
                         item
@@ -182,7 +153,7 @@ const Home: NextPage = () => {
                                 className="image"
                                 src={pageNotFound}
                             />
-                        ) : !search ? (
+                        ) : !vulnerabilities ? (
                             <Typography>
                                 The objective of this work is to develop a
                                 Network Vulnerability Test (NVT) used to scan
@@ -195,7 +166,7 @@ const Home: NextPage = () => {
                                 regulatory requirements.
                             </Typography>
                         ) : (
-                            <MainInfo vulnerabilities={vulnerabilitiesData} />
+                            <MainInfo vulnerabilities={vulnerabilities} />
                         )}
                     </Grid>
                 </Grid>
