@@ -28,8 +28,8 @@ const Home: NextPage = () => {
     const [isError, setIsError] = useState<boolean>(false);
 
     const filterVulnerabilities = (vuln: Vulnerability[]) => {
-        return vuln.filter(v => v.type === 'cve' || v.type === 'zdt')
-    }
+        return vuln.filter(v => v.type === 'cve' || v.type === 'zdt');
+    };
 
     const sendMessage = async () => {
         if (url) {
@@ -38,9 +38,7 @@ const Home: NextPage = () => {
             axios
                 .post<Vulnerability[]>('/api/url', message)
                 .then(function (response) {
-                    setScanData(
-                        filterVulnerabilities(response.data)
-                    );
+                    setScanData(filterVulnerabilities(response.data));
                     setIsError(false);
                     setLoading(false);
                 })
@@ -54,7 +52,7 @@ const Home: NextPage = () => {
     };
 
     return (
-        <div className={styles.container}>
+        <div>
             <Head>
                 <title>Create Next App</title>
                 <meta
@@ -151,11 +149,16 @@ const Home: NextPage = () => {
                             GO
                         </button>
                     </Grid>
-                    {loading ?
-                        <CircularProgress style={{ position: 'fixed', top: '70%', left: '50%' }}/>
-                        :
-                        null
-                    }
+
+                    {loading ? (
+                        <CircularProgress
+                            style={{
+                                position: 'fixed',
+                                top: '70%',
+                                left: '50%',
+                            }}
+                        />
+                    ) : null}
                     <Grid
                         className={'description'}
                         container
@@ -170,7 +173,12 @@ const Home: NextPage = () => {
                                 src={pageNotFound}
                             />
                         ) : scanData.length === 0 ? (
-                            <Typography>
+                            <Typography
+                                style={{
+                                    paddingTop: '8rem',
+                                    fontSize: '1.2rem',
+                                }}
+                            >
                                 The objective of this work is to develop a
                                 Network Vulnerability Test (NVT) used to scan
                                 endpoints to identify and detect vulnerabilities
