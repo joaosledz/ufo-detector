@@ -4,11 +4,12 @@ import Image from 'next/image';
 import howToProtect from '../assets/images/Buttons/howToProtect.svg';
 import redExploit from '../assets/images/Buttons/redExploit.svg';
 import nullExploit from '../assets/images/Buttons/nullExploit.svg';
+import nullProtect from '../assets/images/Buttons/nullProtect.svg';
 import Link from 'next/link';
 import { Vulnerability } from '../services/models/analytics';
 
 export function MainItem(Props: { vulnerability: Vulnerability }) {
-    const { id, cvss, is_exploit } = Props.vulnerability;
+    const { id, cvss, is_exploit, type } = Props.vulnerability;
     const [color, setColor] = useState<string>('green');
     const [classification, setClassification] = useState<string>('low');
     const isExploit = is_exploit === 'true';
@@ -45,26 +46,38 @@ export function MainItem(Props: { vulnerability: Vulnerability }) {
                 alignItems="center"
                 item
             >
-                <Grid item className={'text'} md={2} component={Typography}>
+                <Grid item className={'text'} md={4} component={Typography}>
                     {id}
                 </Grid>
                 {isExploit ? (
                     <Grid
                         item
-                        md={4}
+                        md={2}
                         component={Link}
                         href={`HowToExploit/${id}`}
                     >
                         <Image className="image" src={redExploit} />
                     </Grid>
                 ) : (
-                    <Grid item md={4}>
-                        <Image className="image" src={nullExploit} />
+                    <Grid item md={2}>
+                        <Image src={nullExploit} />
                     </Grid>
                 )}
-                <Grid item md={4} component={Link} href={`HowToProtect/${id}`}>
-                    <Image className="image" src={howToProtect} />
-                </Grid>
+                {type === 'cve' ? (
+                    <Grid
+                        item
+                        md={2}
+                        component={Link}
+                        href={`HowToProtect/${id}`}
+                    >
+                        <Image className="image" src={howToProtect} />
+                    </Grid>
+                ) : (
+                    <Grid item md={2}>
+                        <Image src={nullProtect} />
+                    </Grid>
+                )}
+
                 <Grid item className={'text'} md={1} component={Typography}>
                     cvss:{cvss}
                 </Grid>
