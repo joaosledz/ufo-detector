@@ -46,7 +46,9 @@ const Home: NextPage = () => {
                 })
                 .catch(function (error) {
                     console.log(error);
+                    setLoading(false);
                     setIsError(true);
+                    setScanData([])
                 });
         }
     };

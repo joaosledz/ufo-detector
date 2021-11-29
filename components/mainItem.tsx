@@ -54,7 +54,7 @@ export function MainItem(Props: { vulnerability: Vulnerability }) {
                         item
                         md={2}
                         component={Link}
-                        href={`HowToExploit/${id}`}
+                        href={`https://www.exploit-db.com/search?q=${id}`}
                     >
                         <Image className="image" src={redExploit} />
                     </Grid>

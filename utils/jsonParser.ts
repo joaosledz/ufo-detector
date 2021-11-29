@@ -21,7 +21,9 @@ export const findExploits = (fileName: string) => {
     const outputJson = fs.readFileSync(dir + `/${fileName}.json`, 'utf8')
     
     let obj = JSON.parse(outputJson);
-    let exploits = obj.nmaprun.host[0].ports[0].port[0].script[1].table[0].table;
+    let exploits = obj?.nmaprun?.host[0]?.ports[0]?.port[0]?.script[1]?.table[0]?.table;
+    
+    if (!exploits) return [];
 
     let parsedExploits = [];
     for (let exploit of exploits) {
