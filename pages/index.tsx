@@ -6,62 +6,43 @@ import { Grid, TextField, Typography } from '@mui/material';
 import { MyTextField } from '../styles/components';
 import LogoUFO from '../assets/images/logoUFO.png';
 import { analytics } from '../services/sample';
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { Item } from '../components/item';
-import SocketIOClient from "socket.io-client";
+import axios from 'axios';
 interface IMsg {
     user: string;
     url: string;
     port: string;
 }
+interface Vulnerability {
+    cvss: string,
+    type: string,
+    is_exploit: boolean,
+    id: string
+}
 
-const user = "User_" + String(new Date().getTime()).substr(-3);
+const user = "user_" + String(new Date().getTime()).substr(-3);
 
 const Home: NextPage = () => {
     const [search, setSearch] = useState<boolean>(false);
     const [connected, setConnected] = useState<boolean>(false);
-    const [vulnerabilities, setVulnerability] = useState<IMsg[]>([]);
+    const [vulnerabilities, setVulnerabilities] = useState<Vulnerability[]>([]);
     const [port, setPort] = useState<string>("");
     const [url, setUrl] = useState<string>("");
 
-    useEffect((): any => {
-        // connect to socket server
-        const socket = SocketIOClient.connect(process.env.BASE_URL, {
-            path: "/api/socketio",
-        });
-    
-        socket.on("connect", () => {
-            console.log("SOCKET CONNECTED!", socket.id);
-            setConnected(true);
-        });
-    
-        socket.on("message", (message: IMsg) => {
-            vulnerabilities.push(message);
-            setVulnerability([...vulnerabilities]);
-        });
-    
-        if (socket) return () => socket.disconnect();
-    }, []);
-
     const sendMessage = async () => {
+        setConnected(true);
         if (url) {
-            const message: IMsg = {
-                user,
-                url,
-                port
-            };
+            const message: IMsg = { user, url, port };
 
-            const resp = await fetch("/api/url", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(message),
+            axios.post('/api/url', message)
+                .then(function (response) {
+                    setSearch(true);
+                    setVulnerabilities(response.data);
+                })
+                .catch(function (error) {
+                    console.log(error);
             });
-
-            if (resp.ok) {
-                setSearch(true);
-            }
         }
     };
 
@@ -159,7 +140,6 @@ const Home: NextPage = () => {
                     </Grid>
                     <Grid style={{ padding: '0 12px' }} md={2}>
                         <button
-                            disabled={!connected}
                             className={'lined thick'}
                             onClick={() => {
                                 sendMessage();

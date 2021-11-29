@@ -1,17 +1,29 @@
 import { NextApiRequest } from "next";
 import { NextApiResponseServerIO } from "../../types/next";
+import { exec } from 'child_process';
+import { parseJson, findExploits } from '../../utils/jsonParser';
 
-const urlRequest = (req: NextApiRequest, res: NextApiResponseServerIO) => {
+const urlRequest = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
   if (req.method === "POST") {
-    // get message
     const message = req.body;
-    console.log(message);
+    const nmapCommand = `nmap -sV --script vulners ${message.url} ${message.port ? message.port : ''} -oX public/out/${message.user}.xml`;
 
-    // dispatch to channel "message"
-    res?.socket?.server?.io?.emit("message", message);
-
-    // return message
-    res.status(201).json(message);
+    exec(nmapCommand, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`error: ${error.message}`);
+        return;
+      }
+      
+      if (stderr) {
+        console.error(`stderr: ${stderr}`);
+        return;
+      }
+      
+      parseJson(message.user);
+      let exploits = findExploits(message.user);
+      res.status(201).json(exploits);
+    });
+    
   }
 };
 
