@@ -5,7 +5,7 @@ import { Grid, CircularProgress } from '@mui/material';
 import howToProtect from '../../assets/images/Buttons/howToProtect.svg';
 import { useState, useEffect } from 'react';
 import { Protection } from '@/../services/models/analytics';
-import ProtectInfo from './components/protectInfo';
+import ProtectInfo from '../../components/protectInfo';
 import { DrawedButton } from '@/../components/drawedButton';
 import axios from 'axios';
 
