@@ -12,7 +12,6 @@ export function MainItem(Props: { vulnerability: Vulnerability }) {
     const { id, cvss, is_exploit, type } = Props.vulnerability;
     const [color, setColor] = useState<string>('green');
     const [classification, setClassification] = useState<string>('low');
-    const isExploit = is_exploit === 'true';
     const classify = (cvss: number) => {
         if (cvss <= 3.9) {
             setColor('#21B803');
@@ -49,20 +48,16 @@ export function MainItem(Props: { vulnerability: Vulnerability }) {
                 <Grid item className={'text'} xs={6} component={Typography}>
                     {id}
                 </Grid>
-                {isExploit ? (
-                    <Grid
-                        item
-                        xs={2}
-                        component={Link}
-                        href={`https://www.exploit-db.com/search?q=${id}`}
-                    >
-                        <Image className="image" src={redExploit} />
-                    </Grid>
-                ) : (
-                    <Grid item xs={2}>
-                        <Image src={nullExploit} />
-                    </Grid>
-                )}
+            
+                <Grid
+                    item
+                    xs={2}
+                    component={Link}
+                    href={`https://www.exploit-db.com/search?cve=${id}`}
+                >
+                    <Image className="image" src={redExploit} />
+                </Grid>
+                
                 {type === 'cve' ? (
                     <Grid
                         item

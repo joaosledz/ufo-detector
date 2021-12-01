@@ -28,7 +28,7 @@ const Home: NextPage = () => {
     const [isError, setIsError] = useState<boolean>(false);
 
     const filterVulnerabilities = (vuln: Vulnerability[]) => {
-        return vuln.filter(v => v.type === 'cve' || v.type === 'zdt');
+        return vuln.filter(v => v.type === 'cve');
     };
 
     const sendMessage = async () => {

@@ -17,13 +17,16 @@ export default function HowToProtect() {
     const [data, setData] = useState<Protection[]>([]);
 
     useEffect(() => {
+        console.log('chamou1')
         axios
-            .get(`${cveApiUrl}/${id}`)
-            .then(function (response) {
+        .get(`${cveApiUrl}/${id}`)
+        .then(function (response) {
+                console.log('chamou2')
                 setData(response.data.capec)
                 setLoading(false);
             })
             .catch(function (error) {
+                console.log('chamou3')
                 console.log(error);
             });
     }, []);
