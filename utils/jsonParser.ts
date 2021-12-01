@@ -19,20 +19,29 @@ export const findExploits = (fileName: string) => {
     const dirRelativeToPublicFolder = 'out';
     const dir = path.resolve('./public', dirRelativeToPublicFolder);
 
-    const outputJson = fs.readFileSync(dir + `/${fileName}.json`, 'utf8')
+    try {
+        const outputJson = fs.readFileSync(dir + `/${fileName}.json`, 'utf8')
+        
+        let obj = JSON.parse(outputJson);
     
-    let obj = JSON.parse(outputJson);
-    let exploits = obj?.nmaprun?.host[0]?.ports[0]?.port[0]?.script[1]?.table[0]?.table;
+        if (!obj?.nmaprun?.host) {
+            return [];
+        }
     
-    if (!exploits) return [];
+        let exploits = obj?.nmaprun?.host[0]?.ports[0]?.port[0]?.script[1]?.table[0]?.table;
+    
+        let parsedExploits = [];
+        for (let exploit of exploits) {
+            let newObj = {};
+            exploit.elem.map(el=> {
+                newObj[el.$.key] = el._;            
+            })
+            parsedExploits.push(newObj);
+        }
+        return parsedExploits;
 
-    let parsedExploits = [];
-    for (let exploit of exploits) {
-        let newObj = {};
-        exploit.elem.map(el=> {
-            newObj[el.$.key] = el._;            
-        })
-        parsedExploits.push(newObj);
+    } catch(err) {
+        console.log(err);
+        throw "Could not find exploits"
     }
-    return parsedExploits;
 }
